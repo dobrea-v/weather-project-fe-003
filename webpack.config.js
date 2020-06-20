@@ -1,7 +1,7 @@
 const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin')
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     entry: './src/js/index.js',
     output: {
@@ -30,15 +30,20 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: 'style.css'
         }), 
-        new CopyWebpackPlugin({
-            patterns: [
-                { from: 'index.html', to: 'index.html' }
-            ]
-        }),
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: '!!ejs-webpack-loader!./index.ejs'
+       }),
+        new HtmlWebpackPlugin({
+            filename: 'about.html',
+            template: '!!ejs-webpack-loader!./about.ejs'
+        })
     ],
     devServer: {
         contentBase: path.resolve(__dirname, 'build'),
         compress: true,
+        writeToDisk: true,
+        watchContentBase: true,
         port: 9000,
     }
 };
