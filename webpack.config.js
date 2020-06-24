@@ -37,6 +37,10 @@ module.exports = {
         new HtmlWebpackPlugin({
             filename: 'about.html',
             template: '!!ejs-webpack-loader!./about.ejs'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'list.html',
+            template: '!!ejs-webpack-loader!./list.ejs'
         })
     ],
     devServer: {

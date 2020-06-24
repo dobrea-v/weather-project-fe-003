@@ -1,10 +1,21 @@
 import '../styles/style.scss';
 import { cities } from '../data/cityPhoto.js';
-import { getByCity } from './api';
+import { getWeatherByCity } from './api';
+import { routes } from './routes';
+
+
+function renderSelectedCity(cityKey) {
+    let cityImage = cities[cityKey].url;
+    let image = document.getElementById('image-placeholder');
+    image.setAttribute('src', cityImage);
+    getWeatherByCity(cities[cityKey].name).then(data => renderCityInfoBox(data))
+}
+
 
 function createCityDropdown(cities) {
     let select = document.createElement('select');
     let target = document.querySelector('.locations');
+    if(!target) return;
     select.setAttribute('name', 'city-selector');
     select.setAttribute('id', 'city-selector');
     select.setAttribute('class', 'locations__select');
@@ -17,18 +28,62 @@ function createCityDropdown(cities) {
     for (const city in cities) {
         let option = document.createElement('option');
         option.setAttribute('value', city)
+        option.setAttribute('id', city)
         option.innerText = cities[city].name;
         select.append(option);
     }
     select.addEventListener('change', (event) => {
         let cityKey = event.target.value;
-        let cityImage = cities[cityKey].url;
-        let image = document.getElementById('image-placeholder');
-        image.setAttribute('src', cityImage);
-        // CALL API FOR CITY DATA
-        //getByCity(cities[cityKey].name).then().then()....
+        renderSelectedCity(cityKey);
+        localStorage.setItem('selectedCity', cityKey);
+       
     })
     target.append(select);
 }
 
+function renderCityInfoBox(data) {
+    const {name, main} = data;
+    const container = document.createElement('div');
+    let target = document.querySelector('.locations');
+
+    container.classList.add('city-info-box');
+
+    const cityName = document.createElement('div');
+    cityName.innerText = `${name}: ${main.temp}`
+
+    const celsius = document.createElement('span')
+    celsius.innerHTML = '&#x2103;'
+
+    
+    cityName.append(celsius)
+    container.append(cityName)
+    target.append(container);
+}
+
 createCityDropdown(cities);
+
+
+const selectedCity = localStorage.getItem('selectedCity');
+
+
+if(selectedCity) {
+    let selectedCityElement = document.getElementById(selectedCity)
+    if(selectedCityElement){
+        selectedCityElement.selected = true
+        renderSelectedCity(selectedCity);
+    } 
+} else {
+    console.log('...simple flow');
+}
+
+function initNavigation() {
+    let route = null;
+    for(let item in routes){
+        if(location.pathname.includes(item)) {
+            route = item;
+        }
+    }
+    document.getElementById(route).classList.add('active')
+}
+
+initNavigation()
