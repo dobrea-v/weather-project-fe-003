@@ -1,7 +1,5 @@
-import '../styles/style.scss';
 import { cities } from '../data/cityPhoto.js';
 import { getWeatherByCity } from './api';
-import { routes } from './routes';
 
 
 function renderSelectedCity(cityKey) {
@@ -15,7 +13,6 @@ function renderSelectedCity(cityKey) {
 function createCityDropdown(cities) {
     let select = document.createElement('select');
     let target = document.querySelector('.locations');
-    if(!target) return;
     select.setAttribute('name', 'city-selector');
     select.setAttribute('id', 'city-selector');
     select.setAttribute('class', 'locations__select');
@@ -75,15 +72,3 @@ if(selectedCity) {
 } else {
     console.log('...simple flow');
 }
-
-function initNavigation() {
-    let route = null;
-    for(let item in routes){
-        if(location.pathname.includes(item)) {
-            route = item;
-        }
-    }
-    document.getElementById(route).classList.add('active')
-}
-
-initNavigation()
