@@ -58,6 +58,7 @@ module.exports = {
             chunks: ['shared','cities']
         })
     ],
+    devtool: 'eval-source-map',
     devServer: {
         contentBase: path.resolve(__dirname, 'build'),
         compress: true,
